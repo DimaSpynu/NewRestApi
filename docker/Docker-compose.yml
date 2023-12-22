@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+  app:
+    image: '02652a8ed428dba1bfa58af0c8b6bb61ba47f4ba101dea99fc147760dcaba6d9'
+    container_name: app
+    expose:
+      - '8080'
+    ports:
+      - '8080:8080'
+    environment:
+      - DB_USER=rfupddck
+      - DB_PASSWORD=QBu54i-itP9QMS-XrMnTCT8c6lXarkLH
+      - DB_URL=jdbc:postgresql://db:5432/rfupddck
+    depends_on:
+      - db
+  db:
+    image: 'postgres'
+    container_name: db
+    expose:
+      - '5432'
+    environment:
+      - POSTGRES_USER=rfupddck
+      - POSTGRES_PASSWORD=QBu54i-itP9QMS-XrMnTCT8c6lXarkLH

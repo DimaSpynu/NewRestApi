@@ -1,33 +1,36 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Список пользователей</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
 </head>
 <body>
-<h1>Список пользователей</h1>
+<h1>User List</h1>
 <table>
     <tr>
-        <th>Имя</th>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Age</th>
         <th>Email</th>
-        <th>Действия</th>
+        <th>Actions</th>
     </tr>
     <tr th:each="user : ${users}">
-        <td th:text="${user.name}"></td>
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.age}"></td>
         <td th:text="${user.email}"></td>
         <td>
-            <form action="/users/{id}/delete" method="post">
-                <input type="hidden" name="_method" value="delete">
-                <input type="hidden" name="id" th:value="${user.id}">
-                <input type="submit" value="Удалить">
+            <a th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>
+            <form th:action="@{/users/{id}/delete(id=${user.id})}" method="post">
+                <input type="submit" value="Delete">
             </form>
         </td>
     </tr>
-
-    <br/>
-    <hr/>
-
-<a href="/templates/user/user-create.html">Создать нового пользователя</a>
 </table>
+<a th:href="@{/users/new}">Create User</a>
 </body>
 </html>

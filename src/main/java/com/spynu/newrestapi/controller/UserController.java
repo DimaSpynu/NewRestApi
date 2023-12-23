@@ -1,17 +1,20 @@
 package com.spynu.newrestapi.controller;
+
 import com.spynu.newrestapi.entity.User;
 import com.spynu.newrestapi.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
-@RestController
-@RequestMapping("/api/users")
+@Controller
+@RequestMapping
 @Api(tags = "Пользователи")
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -22,56 +25,46 @@ public class UserController {
     @GetMapping("/getUserList")
     public String showUsers(Model model) {
         List<User> users = userService.showAllUsersService();
-        try {
-            model.addAttribute("users", users);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "product/user-list-new";
+        model.addAttribute("users", users);
+        return "user/user-list";
     }
 
-    @ApiOperation(value = "Показать форму создания пользователя")
-    @GetMapping("/users/new")
+
+    @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("user", new User());
-        return "user-create";
+        return "user/user-create";
     }
 
-    @ApiOperation(value = "Создать нового пользователя")
     @PostMapping("/createUsers")
     public String createUser(@ModelAttribute User user) {
-        userService.createNewUserService(new User());
-        return "redirect:/users";
+        userService.createNewUserService(user);
+        return "redirect:/users/getUserList";
     }
 
-    @ApiOperation(value = "Показать форму редактирования пользователя")
-    @GetMapping("/users/{id}/edit")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/{id}/edit")
+    public String showEditFormUser(@PathVariable("id") Long id, Model model) {
         User user = userService.showUserByIdService(id);
         model.addAttribute("user", user);
-        return "user-edit";
+        return "user/user-edit";
     }
 
-    @ApiOperation(value = "Обновить пользователя")
-    @PutMapping("/users/{id}")
+    @PostMapping("/{id}")
     public String updateUser(@PathVariable("id") Long id, @ModelAttribute User user) {
         User updatedUser = userService.showUserByIdService(id);
-        if(updatedUser != null) {
+        if (updatedUser != null) {
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
             updatedUser.setAge(user.getAge());
             updatedUser.setEmail(user.getEmail());
-
             userService.updateUserService(updatedUser);
         }
-        return "redirect:/users";
+        return "redirect:/users/getUserList";
     }
 
-    @ApiOperation(value = "Удалить пользователя")
-    @DeleteMapping("/users/{id}/delete")
+    @PostMapping("/{id}/delete")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteUserService(id);
-        return "redirect:/users";
+        return "redirect:/users/getUserList";
     }
 }

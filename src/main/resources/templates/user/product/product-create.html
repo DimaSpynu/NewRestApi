@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Product</title>
+</head>
+<body>
+<p th:text="${products}"/>
+<button type="button">Create Product</button>
+<form action="/api/products/createProduct">
+    <h1 th:text="${product}"/>
+    </form>
+</body>
+</html>

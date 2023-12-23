@@ -22,7 +22,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     @Id
-    private int id;
+    private Long id;
 
     @NotEmpty(message = "Product should not be empty")
     @Size(min = 2, max = 30, message = "Product should be between 2 and 30 characters")

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление продуктами</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Управление продуктами</h1>
+
+<!-- Форма создания нового продукта -->
+<h2>Создание нового продукта</h2>
+<form action="" id="createForm">
+    <label for="name">Название:</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="price">Цена:</label>
+    <input type="number" id="price" name="price" required><br>
+
+    <button type="submit">Создать</button>
+</form>
+
+<!-- Таблица с данными о продуктах -->
+<h2>Список продуктов</h2>
+<table id="productTable">
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Цена</th>
+        <th>Описание</th>
+        <th>Действия</th>
+    </tr>
+</table>
+
+<script>
+    // Функция для добавления строки в таблицу с продуктами
+    function addProductRow(product) {
+        var table = document.getElementById("productTable");
+        var row = table.insertRow();
+
+        var idCell = row.insertCell();
+        idCell.innerHTML = product.id;
+
+        var nameCell = row.insertCell();
+        nameCell.innerHTML = product.name;
+
+        var priceCell = row.insertCell();
+        priceCell.innerHTML = product.price;
+
+        var descriptionCell = row.insertCell();
+        descriptionCell.innerHTML = product.description;
+
+        var actionsCell = row.insertCell();
+        actionsCell.innerHTML = `<button onclick="editProduct(${product.id})">Редактировать</button>
+        <button onclick="deleteProduct(${product.id})">Удалить</button>`;
+    }
+
+    // Функция для обновления таблицы с продуктами
+    function updateProductTable() {
+        var table = document.getElementById("productTable");
+        table.innerHTML = `
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Цена</th>
+                    <th>Описание</th>
+                    <th>Действия</th>
+                </tr>
+            `;
+
+        fetch("/api/products/showProductList")
+            .then(response => response.json())
+            .then(data => data.forEach(product => addProductRow(product)));
+    }
+
+    // Функция для создания нового продукта
+    function createProduct(event) {
+        event.preventDefault();
+
+        var form = document.getElementById("createForm");
+        var name = form.elements["name"].value;
+        var price = form.elements["price"].value;
+        var description = form.elements["description"].value;
+
+        fetch("/api/products/createProduct", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                price: price,
+                description: description
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    form.reset();
+                    updateProductTable();
+                } else {
+                    alert("Ошибка при создании продукта");
+                }
+            });
+    }
+
+    // Функция для редактирования продукта
+    function editProduct(id) {
+        var productName = prompt("Введите новое название продукта:");
+        var productPrice = prompt("Введите новую цену продукта:");
+        var productDescription = prompt("Введите новое описание продукта:");
+
+        fetch("/api/products/${id}/update", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: productName,
+                price: productPrice,
+                description: productDescription
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    updateProductTable();
+                } else {
+                    alert("Ошибка при редактировании продукта");
+                }
+            });
+    }
+
+    // Функция для удаления продукта
+    function deleteProduct(id) {
+        if (confirm("Вы действительно хотите удалить продукт?")) {
+            fetch("/api/products/${id}/delete", {
+                method: "DELETE"
+            })
+                .then(response => {
+                    if (response.ok) {
+                        updateProductTable();
+                    } else {
+                        alert("Ошибка при удалении продукта");
+                    }
+                });
+        }
+    }
+
+    // Обработка отправки формы создания нового продукта
+    document.getElementById("createForm").addEventListener("submit", createProduct);
+
+    // Обновление таблицы с продуктами при загрузке страницы
+    updateProductTable();
+</script>
+</body>
+</html>

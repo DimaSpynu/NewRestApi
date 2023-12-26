@@ -1,16 +1,25 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Редактирование пользователя</title>
+    <title>Edit User</title>
 </head>
 <body>
-<h1>Редактирование пользователя</h1>
-<form action="/users/{id}" method="post" th:object="${user}">
+<h1>Edit User</h1>
+<form th:action="@{/api/users/{id}(id=${user.id})}" method="post" th:object="${user}">
     <input type="hidden" th:field="*{id}">
-    <label>Имя: <input type="text" th:field="*{name}"></label><br>
-    <label>Email: <input type="text" th:field="*{email}"></label><br>
-    <input type="submit" value="Сохранить">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" th:field="*{firstName}"><br>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" th:field="*{lastName}"><br>
+    <label for="age">Age:</label>
+    <input type="text" id="age" th:field="*{age}"><br>
+    <label for="email">Email:</label>
+    <input type="text" id="email" th:field="*{email}"><br>
+    <label for="password">Password:</label>
+    <input type="text" id="password" th:field="*{password}"><br>
+    <input type="submit" value="Save">
 </form>
+<a th:href="@{/api/users}">Back to List</a>
 </body>
 </html>

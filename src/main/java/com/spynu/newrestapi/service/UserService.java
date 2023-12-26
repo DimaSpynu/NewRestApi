@@ -5,8 +5,8 @@ import com.spynu.newrestapi.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -22,7 +22,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User showUserByIdService(Long id) {
+    public Optional<User> showUserByIdService(Long id) {
         return userRepository.findById(id);
     }
 

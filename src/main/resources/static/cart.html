@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Cart</title>
+  <!-- Ваши стили и скрипты -->
+</head>
+<body>
+<h1>Cart</h1>
+
+<ul>
+  <!-- Перебор элементов корзины и отображение информации -->
+  <li th:each="cartItem : ${cartItems}">
+    Product: <span th:text="${cartItem.product.name}"></span>
+    Quantity: <span th:text="${cartItem.quantity}"></span>
+  </li>
+</ul>
+
+<!-- Форма для добавления товара в корзину -->
+<form th:action="@{/api/cart/addProduct}" method="post">
+  <label>Product ID:</label>
+  <input type="text" name="productId" required/>
+
+  <label>Quantity:</label>
+  <input type="number" name="quantity" required/>
+
+  <button type="submit">Add to Cart</button>
+</form>
+
+<!-- Форма для удаления товара из корзины -->
+<form th:action="@{/api/cart/removeProduct}" method="post">
+  <label>Cart Item ID:</label>
+  <input type="text" name="cartItemId" required/></form>

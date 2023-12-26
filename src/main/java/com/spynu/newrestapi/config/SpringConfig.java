@@ -2,7 +2,6 @@ package com.spynu.newrestapi.config;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -12,7 +11,6 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 @Configuration
-@ComponentScan(basePackages = "com.spynu.newrestapi")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
 
@@ -30,8 +28,6 @@ public class SpringConfig implements WebMvcConfigurer {
         templateResolver.setSuffix(".html");
         return templateResolver;
     }
-
-
 
     @Bean
     public SpringTemplateEngine templateEngine() {
